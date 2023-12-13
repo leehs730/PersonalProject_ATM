@@ -10,7 +10,6 @@ public class UIManager : MonoBehaviour
     public GameObject deposit;
     public GameObject withdrawal;
     public GameObject Message;
-    
 
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI currentMoneyText;
@@ -24,7 +23,7 @@ public class UIManager : MonoBehaviour
 
     public UserData userData;
 
-    private void Start()
+    private void Start()    // 시작할 사용자의 데이터 선언
     {
         userData.userName = "이형석";
         userData.sixPassNumber = 123450;
@@ -33,7 +32,7 @@ public class UIManager : MonoBehaviour
         UpdateUI();
     }
 
-    private void UpdateUI()
+    private void UpdateUI() // 변수가 수정됨에 따른 UI에 들어가는 값 업데이트
     {
         nameText.text = userData.userName;
         currentMoneyText.text = "현재 금액: " + userData.currentMoney;
@@ -42,7 +41,6 @@ public class UIManager : MonoBehaviour
 
     public void OnClickDeposit()
     {
-        Debug.Log("입금 예시");
         chooseButton.SetActive(false);
         inOutbool = true;
         deposit.SetActive(true);
@@ -51,7 +49,6 @@ public class UIManager : MonoBehaviour
 
     public void OnClickWithdrawal()
     {
-        Debug.Log("출금 예시");
         chooseButton.SetActive(false);
         inOutbool = false;
         withdrawal.SetActive(true);
@@ -60,19 +57,16 @@ public class UIManager : MonoBehaviour
     public void OnClickMoney5()
     {
         CheckInOut(50000);
-        chooseButton.SetActive(true);
     }
 
     public void OnClickMoney3()
     {
         CheckInOut(30000);
-        chooseButton.SetActive(true);
     }
 
     public void OnClickMoney1()
     {
         CheckInOut(10000);
-        chooseButton.SetActive(true);
     }
 
     public void CancelButton()
@@ -84,36 +78,86 @@ public class UIManager : MonoBehaviour
 
     public void CheckInOut(int money)
     {
-        if (inOutbool)
-        {
-            userData.Deposit(money);
-            deposit.SetActive(false);
-            UpdateUI();
-        }
+        if (userData.currentMoney < money && inOutbool) ActiveMessage();
+
+        else if (userData.depositMoney < money && !inOutbool) ActiveMessage();
 
         else
         {
-            userData.Withdrawal(money);
-            withdrawal.SetActive(false);
-            UpdateUI();
+            if (inOutbool)
+            {
+                userData.Deposit(money);
+                deposit.SetActive(false);
+                UpdateUI();
+                chooseButton.SetActive(true);
+            }
+
+            else
+            {
+                userData.Withdrawal(money);
+                withdrawal.SetActive(false);
+                UpdateUI();
+                chooseButton.SetActive(true);
+            }
         }
-    }
+    }        
 
     public void CustomDeposit()
     {
-        userData.currentMoney -= int.Parse(customDMoneyInput.text);
-        userData.depositMoney += int.Parse(customDMoneyInput.text);
-        UpdateUI();
-        deposit.SetActive(false);
-        chooseButton.SetActive(true);
+        int dmoney = int.Parse(customDMoneyInput.text);
+        if (userData.currentMoney < dmoney && inOutbool) ActiveMessage();
+        else
+        {
+            userData.currentMoney -= dmoney;
+            userData.depositMoney += dmoney;
+            UpdateUI();
+            deposit.SetActive(false);
+            chooseButton.SetActive(true);
+        }
+        
     }
 
     public void CustomWithdrawal()
     {
-        userData.currentMoney += int.Parse(customWMoneyInput.text);
-        userData.depositMoney -= int.Parse(customWMoneyInput.text);
-        UpdateUI();
-        withdrawal.SetActive(false);
-        chooseButton.SetActive(true);
+        int wmoney = int.Parse(customWMoneyInput.text);
+        if (userData.depositMoney < wmoney && !inOutbool) ActiveMessage();
+        else
+        {
+            userData.currentMoney += wmoney;
+            userData.depositMoney -= wmoney;
+            UpdateUI();
+            withdrawal.SetActive(false);
+            chooseButton.SetActive(true);
+        }        
     }
+
+    public void ActiveMessage()
+    {
+        Message.SetActive(true);
+        MSG.text = inOutbool ? "잔액이 부족합니다." : "출금할 금액이 부족합니다.";
+    }
+
+    //public void CheckDMoeny(int money)
+    //{
+    //    if(userData.currentMoney < money)
+    //    {
+    //        Message.SetActive(true);
+    //        MSG.text = "잔액이 부족합니다.";
+    //    }
+    //}
+
+    //public void CheckWMoney(int money)
+    //{
+    //    if(userData.depositMoney < money)
+    //    {
+    //        Message.SetActive(true);
+    //        MSG.text = "출금할 금액이 부족합니다.";
+    //    }
+    //}
+
+    public void TurnOffMessage()
+    {
+        Message.SetActive(false);
+    }
+
 }
