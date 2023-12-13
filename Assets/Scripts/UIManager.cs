@@ -9,12 +9,14 @@ public class UIManager : MonoBehaviour
     public GameObject chooseButton;
     public GameObject deposit;
     public GameObject withdrawal;
+    public GameObject Message;
 
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI currentMoneyText;
     public TextMeshProUGUI depositMoneyText;
     public Button confirmButton;
-
+    public TextMeshProUGUI MSG;
+    public bool inOutbool;
 
     public UserData userData;
 
@@ -24,6 +26,7 @@ public class UIManager : MonoBehaviour
         userData.sixPassNumber = 123450;
         userData.currentMoney = 100000;
         userData.depositMoney = 50000;
+
         UpdateUI();
     }
 
@@ -38,6 +41,7 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("입금 예시");
         chooseButton.SetActive(false);
+        inOutbool = true;
         deposit.SetActive(true);
 
     }
@@ -46,6 +50,49 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("출금 예시");
         chooseButton.SetActive(false);
+        inOutbool = false;
         withdrawal.SetActive(true);
+    }
+
+    public void OnClickMoney5()
+    {
+        CheckInOut(50000);
+        chooseButton.SetActive(true);
+    }
+
+    public void OnClickMoney3()
+    {
+        CheckInOut(30000);
+        chooseButton.SetActive(true);
+    }
+
+    public void OnClickMoney1()
+    {
+        CheckInOut(10000);
+        chooseButton.SetActive(true);
+    }
+
+    public void CancelButton()
+    {
+        deposit.SetActive(false);
+        withdrawal.SetActive(false);
+        chooseButton.SetActive(true);
+    }
+
+    public void CheckInOut(int money)
+    {
+        if (inOutbool)
+        {
+            userData.Deposit(money);
+            deposit.SetActive(false);
+            UpdateUI();
+        }
+
+        else
+        {
+            userData.Withdrawal(money);
+            withdrawal.SetActive(false);
+            UpdateUI();
+        }
     }
 }
