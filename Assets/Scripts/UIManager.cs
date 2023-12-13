@@ -10,11 +10,15 @@ public class UIManager : MonoBehaviour
     public GameObject deposit;
     public GameObject withdrawal;
     public GameObject Message;
+    
 
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI currentMoneyText;
     public TextMeshProUGUI depositMoneyText;
     public Button confirmButton;
+    public TMP_InputField customDMoneyInput;
+    public TMP_InputField customWMoneyInput;
+    public string customMoney;
     public TextMeshProUGUI MSG;
     public bool inOutbool;
 
@@ -26,7 +30,6 @@ public class UIManager : MonoBehaviour
         userData.sixPassNumber = 123450;
         userData.currentMoney = 100000;
         userData.depositMoney = 50000;
-
         UpdateUI();
     }
 
@@ -94,5 +97,23 @@ public class UIManager : MonoBehaviour
             withdrawal.SetActive(false);
             UpdateUI();
         }
+    }
+
+    public void CustomDeposit()
+    {
+        userData.currentMoney -= int.Parse(customDMoneyInput.text);
+        userData.depositMoney += int.Parse(customDMoneyInput.text);
+        UpdateUI();
+        deposit.SetActive(false);
+        chooseButton.SetActive(true);
+    }
+
+    public void CustomWithdrawal()
+    {
+        userData.currentMoney += int.Parse(customWMoneyInput.text);
+        userData.depositMoney -= int.Parse(customWMoneyInput.text);
+        UpdateUI();
+        withdrawal.SetActive(false);
+        chooseButton.SetActive(true);
     }
 }
